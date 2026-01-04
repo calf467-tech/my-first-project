@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futures Market Week Progress</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #8892b0;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .market-status {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .market-open {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+
+        .market-closed {
+            background: rgba(255, 82, 82, 0.15);
+            color: #ff5252;
+        }
+
+        .progress-item {
+            margin-bottom: 25px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            color: #ccd6f6;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .progress-value {
+            color: #64ffda;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .bar-1 .progress-fill { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .bar-2 .progress-fill { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .bar-3 .progress-fill { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .bar-4 .progress-fill { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        .bar-5 .progress-fill { background: linear-gradient(90deg, #fa709a, #fee140); }
+
+        .time-info {
+            text-align: center;
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .current-time {
+            color: #ccd6f6;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Futures Market Week Progress</h1>
+        <p class="subtitle">CME Globex Trading Hours (Sun 5PM - Fri 4PM CT)</p>
+
+        <div id="marketStatus" class="market-status market-open">
+            Market Open
+        </div>
+
+        <div class="progress-item bar-1">
+            <div class="progress-header">
+                <span class="progress-label">📅 Overall Week Progress</span>
+                <span class="progress-value" id="weekValue">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="weekProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-2">
+            <div class="progress-header">
+                <span class="progress-label">📆 Trading Days Completed</span>
+                <span class="progress-value" id="daysValue">0/5</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="daysProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-3">
+            <div class="progress-header">
+                <span class="progress-label">🌅 Current Day Progress</span>
+                <span class="progress-value" id="dayValue">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="dayProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-4">
+            <div class="progress-header">
+                <span class="progress-label">⏰ Hours Traded This Week</span>
+                <span class="progress-value" id="hoursValue">0h / 118.5h</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="hoursProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-5">
+            <div class="progress-header">
+                <span class="progress-label">🏁 Time Until Week Close</span>
+                <span class="progress-value" id="closeValue">--</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="closeProgress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="time-info">
+            <div class="current-time" id="currentTime">--</div>
+            <div id="timezone">Central Time (CT)</div>
+        </div>
+    </div>
+
+    <script>
+        // Futures market hours (CME Globex)
+        // Opens: Sunday 5:00 PM CT
+        // Closes: Friday 4:00 PM CT
+        // Daily maintenance: 4:00 PM - 5:00 PM CT (Mon-Thu)
+
+        const WEEK_OPEN_DAY = 0;  // Sunday
+        const WEEK_OPEN_HOUR = 17; // 5 PM CT
+        const WEEK_CLOSE_DAY = 5;  // Friday
+        const WEEK_CLOSE_HOUR = 16; // 4 PM CT
+
+        // Total trading hours in a week (excluding daily maintenance breaks)
+        // Sun 5PM - Mon 4PM = 23h, Mon 5PM - Tue 4PM = 23h, etc.
+        // Total: ~118.5 hours of trading
+        const TOTAL_WEEK_HOURS = 118.5;
+
+        function getCentralTime() {
+            // Convert current time to Central Time
+            const now = new Date();
+            const ct = new Date(now.toLocaleString("en-US", {timeZone: "America/Chicago"}));
+            return ct;
+        }
+
+        function getWeekStart(date) {
+            // Get the Sunday 5PM CT of the current trading week
+            const ct = new Date(date);
+            const day = ct.getDay();
+            const hour = ct.getHours();
+
+            // Calculate days to go back to Sunday
+            let daysBack = day;
+
+            // If it's Sunday before 5PM, go back to previous Sunday
+            if (day === 0 && hour < WEEK_OPEN_HOUR) {
+                daysBack = 7;
+            }
+
+            const weekStart = new Date(ct);
+            weekStart.setDate(ct.getDate() - daysBack);
+            weekStart.setHours(WEEK_OPEN_HOUR, 0, 0, 0);
+
+            return weekStart;
+        }
+
+        function getWeekEnd(weekStart) {
+            // Get the Friday 4PM CT of the trading week
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 5); // Sunday + 5 = Friday
+            weekEnd.setHours(WEEK_CLOSE_HOUR, 0, 0, 0);
+            return weekEnd;
+        }
+
+        function isMarketOpen(ct) {
+            const day = ct.getDay();
+            const hour = ct.getHours();
+            const minute = ct.getMinutes();
+            const time = hour + minute / 60;
+
+            // Weekend check
+            if (day === 6) return false; // Saturday - closed
+            if (day === 0 && time < WEEK_OPEN_HOUR) return false; // Sunday before 5PM
+
+            // Friday after close
+            if (day === 5 && time >= WEEK_CLOSE_HOUR) return false;
+
+            // Daily maintenance break (4PM - 5PM CT, Mon-Thu)
+            if (day >= 1 && day <= 4) {
+                if (time >= 16 && time < 17) return false;
+            }
+
+            return true;
+        }
+
+        function calculateProgress() {
+            const ct = getCentralTime();
+            const weekStart = getWeekStart(ct);
+            const weekEnd = getWeekEnd(weekStart);
+
+            const now = ct.getTime();
+            const start = weekStart.getTime();
+            const end = weekEnd.getTime();
+
+            // Overall week progress
+            let weekProgress = 0;
+            if (now >= start && now <= end) {
+                weekProgress = ((now - start) / (end - start)) * 100;
+            } else if (now > end) {
+                weekProgress = 100;
+            }
+
+            // Trading days completed (Mon=1, Tue=2, Wed=3, Thu=4, Fri=5)
+            const day = ct.getDay();
+            const hour = ct.getHours();
+            let tradingDaysCompleted = 0;
+
+            if (day === 0) {
+                tradingDaysCompleted = 0;
+            } else if (day === 6) {
+                tradingDaysCompleted = 5;
+            } else {
+                // For weekdays, count completed days
+                tradingDaysCompleted = day - 1;
+                // Add current day if past close
+                if (hour >= WEEK_CLOSE_HOUR && day === 5) {
+                    tradingDaysCompleted = 5;
+                }
+            }
+
+            const daysProgress = (tradingDaysCompleted / 5) * 100;
+
+            // Current day progress (within 23-hour trading session)
+            let dayProgress = 0;
+            if (isMarketOpen(ct)) {
+                // Session runs from 5PM previous day to 4PM current day
+                let sessionStart, sessionEnd;
+
+                if (hour >= 17) {
+                    // After 5PM - new session started
+                    sessionStart = new Date(ct);
+                    sessionStart.setHours(17, 0, 0, 0);
+                    sessionEnd = new Date(ct);
+                    sessionEnd.setDate(sessionEnd.getDate() + 1);
+                    sessionEnd.setHours(16, 0, 0, 0);
+                } else {
+                    // Before 5PM - session from yesterday
+                    sessionStart = new Date(ct);
+                    sessionStart.setDate(sessionStart.getDate() - 1);
+                    sessionStart.setHours(17, 0, 0, 0);
+                    sessionEnd = new Date(ct);
+                    sessionEnd.setHours(16, 0, 0, 0);
+                }
+
+                dayProgress = ((now - sessionStart.getTime()) / (sessionEnd.getTime() - sessionStart.getTime())) * 100;
+                dayProgress = Math.max(0, Math.min(100, dayProgress));
+            }
+
+            // Hours traded calculation
+            let hoursTradedMs = now - start;
+            if (hoursTradedMs < 0) hoursTradedMs = 0;
+            if (now > end) hoursTradedMs = end - start;
+
+            // Subtract maintenance breaks (1 hour each day Mon-Thu)
+            const daysSinceStart = Math.floor((now - start) / (24 * 60 * 60 * 1000));
+            const maintenanceBreaks = Math.min(4, Math.max(0, daysSinceStart));
+            const hoursTraded = Math.max(0, (hoursTradedMs / (1000 * 60 * 60)) - maintenanceBreaks);
+            const hoursProgress = (hoursTraded / TOTAL_WEEK_HOURS) * 100;
+
+            // Time until close
+            let timeUntilClose = end - now;
+            if (timeUntilClose < 0) timeUntilClose = 0;
+            const hoursUntilClose = Math.floor(timeUntilClose / (1000 * 60 * 60));
+            const minutesUntilClose = Math.floor((timeUntilClose % (1000 * 60 * 60)) / (1000 * 60));
+
+            // Close progress (inverse - how much time has passed)
+            const closeProgress = weekProgress;
+
+            return {
+                weekProgress: Math.min(100, weekProgress),
+                daysProgress: Math.min(100, daysProgress),
+                tradingDaysCompleted,
+                dayProgress: Math.min(100, dayProgress),
+                hoursTraded: hoursTraded.toFixed(1),
+                hoursProgress: Math.min(100, hoursProgress),
+                hoursUntilClose,
+                minutesUntilClose,
+                closeProgress: Math.min(100, closeProgress),
+                isOpen: isMarketOpen(ct),
+                currentTime: ct.toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                }),
+                currentDay: ct.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric'
+                })
+            };
+        }
+
+        function updateUI() {
+            const progress = calculateProgress();
+
+            // Update market status
+            const statusEl = document.getElementById('marketStatus');
+            statusEl.textContent = progress.isOpen ? '🟢 Market Open' : '🔴 Market Closed';
+            statusEl.className = `market-status ${progress.isOpen ? 'market-open' : 'market-closed'}`;
+
+            // Update progress bars
+            document.getElementById('weekProgress').style.width = `${progress.weekProgress}%`;
+            document.getElementById('weekValue').textContent = `${progress.weekProgress.toFixed(1)}%`;
+
+            document.getElementById('daysProgress').style.width = `${progress.daysProgress}%`;
+            document.getElementById('daysValue').textContent = `${progress.tradingDaysCompleted}/5 days`;
+
+            document.getElementById('dayProgress').style.width = `${progress.dayProgress}%`;
+            document.getElementById('dayValue').textContent = progress.isOpen ?
+                `${progress.dayProgress.toFixed(1)}%` : 'Session Closed';
+
+            document.getElementById('hoursProgress').style.width = `${progress.hoursProgress}%`;
+            document.getElementById('hoursValue').textContent = `${progress.hoursTraded}h / ${TOTAL_WEEK_HOURS}h`;
+
+            document.getElementById('closeProgress').style.width = `${100 - progress.closeProgress}%`;
+            document.getElementById('closeValue').textContent =
+                `${progress.hoursUntilClose}h ${progress.minutesUntilClose}m remaining`;
+
+            // Update time display
+            document.getElementById('currentTime').textContent =
+                `${progress.currentDay} • ${progress.currentTime}`;
+        }
+
+        // Initial update
+        updateUI();
+
+        // Update every second for live progress
+        setInterval(updateUI, 1000);
+    </script>
+</body>
+</html>
