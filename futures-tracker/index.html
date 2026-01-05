@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futures Market Week Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: #8892b0;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .market-status {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .market-open {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+        }
+
+        .market-closed {
+            background: rgba(255, 82, 82, 0.15);
+            color: #ff5252;
+        }
+
+        .week-summary {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 10px;
+        }
+
+        .week-percentage {
+            color: #64ffda;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .week-percentage-label {
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .progress-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            color: #ccd6f6;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .progress-value {
+            color: #64ffda;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .bar-1 .progress-fill { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .bar-2 .progress-fill { background: linear-gradient(90deg, #f093fb, #f5576c); }
+        .bar-3 .progress-fill { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+        .bar-4 .progress-fill { background: linear-gradient(90deg, #43e97b, #38f9d7); }
+        .bar-5 .progress-fill { background: linear-gradient(90deg, #fa709a, #fee140); }
+
+        .time-info {
+            text-align: center;
+            color: #8892b0;
+            font-size: 0.85rem;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .current-time {
+            color: #ccd6f6;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .now-badge {
+            display: inline-block;
+            background: rgba(100, 255, 218, 0.2);
+            color: #64ffda;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Futures Market Week Tracker</h1>
+        <p class="subtitle">Sunday 5:00 PM ET - Friday 5:00 PM ET (120 Hours)</p>
+
+        <div id="marketStatus" class="market-status market-open">
+            Market Open
+        </div>
+
+        <div class="week-summary">
+            <div class="week-percentage" id="weekPercentage">0%</div>
+            <div class="week-percentage-label">of trading week complete</div>
+        </div>
+
+        <div class="progress-item bar-1">
+            <div class="progress-header">
+                <span class="progress-label">Sunday 5PM - Monday 5PM<span class="now-badge" id="badge1" style="display:none">NOW</span></span>
+                <span class="progress-value" id="value1">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="fill1" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-2">
+            <div class="progress-header">
+                <span class="progress-label">Monday 5PM - Tuesday 5PM<span class="now-badge" id="badge2" style="display:none">NOW</span></span>
+                <span class="progress-value" id="value2">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="fill2" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-3">
+            <div class="progress-header">
+                <span class="progress-label">Tuesday 5PM - Wednesday 5PM<span class="now-badge" id="badge3" style="display:none">NOW</span></span>
+                <span class="progress-value" id="value3">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="fill3" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-4">
+            <div class="progress-header">
+                <span class="progress-label">Wednesday 5PM - Thursday 5PM<span class="now-badge" id="badge4" style="display:none">NOW</span></span>
+                <span class="progress-value" id="value4">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="fill4" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="progress-item bar-5">
+            <div class="progress-header">
+                <span class="progress-label">Thursday 5PM - Friday 5PM<span class="now-badge" id="badge5" style="display:none">NOW</span></span>
+                <span class="progress-value" id="value5">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="fill5" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="time-info">
+            <div class="current-time" id="currentTime">--</div>
+            <div>Eastern Time (ET)</div>
+        </div>
+    </div>
+
+    <script>
+        const MARKET_OPEN_HOUR = 17; // 5 PM ET
+
+        function getEasternTime() {
+            const now = new Date();
+            return new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+        }
+
+        function getWeekStart(et) {
+            const day = et.getDay();
+            const hour = et.getHours();
+
+            let daysBack = day;
+            if (day === 0 && hour < MARKET_OPEN_HOUR) daysBack = 7;
+            if (day === 6) daysBack = 6;
+
+            const weekStart = new Date(et);
+            weekStart.setDate(et.getDate() - daysBack);
+            weekStart.setHours(MARKET_OPEN_HOUR, 0, 0, 0);
+            return weekStart;
+        }
+
+        function isMarketOpen(et) {
+            const day = et.getDay();
+            const time = et.getHours() + et.getMinutes() / 60;
+
+            if (day === 6) return false;
+            if (day === 0 && time < MARKET_OPEN_HOUR) return false;
+            if (day === 5 && time >= MARKET_OPEN_HOUR) return false;
+            return true;
+        }
+
+        function update() {
+            const et = getEasternTime();
+            const weekStart = getWeekStart(et);
+            const elapsed = Math.max(0, et.getTime() - weekStart.getTime());
+
+            const msPerBar = 24 * 60 * 60 * 1000;
+            const totalMs = 5 * msPerBar;
+            const weekPercent = Math.min(100, (elapsed / totalMs) * 100);
+
+            const isOpen = isMarketOpen(et);
+
+            // Update market status
+            const statusEl = document.getElementById('marketStatus');
+            statusEl.textContent = isOpen ? 'Market Open' : 'Market Closed';
+            statusEl.className = 'market-status ' + (isOpen ? 'market-open' : 'market-closed');
+
+            // Update week percentage
+            document.getElementById('weekPercentage').textContent = weekPercent.toFixed(1) + '%';
+
+            // Update each bar
+            for (let i = 0; i < 5; i++) {
+                const barStart = i * msPerBar;
+                const barEnd = (i + 1) * msPerBar;
+
+                let progress = 0;
+                let isActive = false;
+
+                if (elapsed >= barEnd) {
+                    progress = 100;
+                } else if (elapsed > barStart) {
+                    progress = ((elapsed - barStart) / msPerBar) * 100;
+                    isActive = true;
+                }
+
+                const fill = document.getElementById('fill' + (i + 1));
+                const value = document.getElementById('value' + (i + 1));
+                const badge = document.getElementById('badge' + (i + 1));
+
+                fill.style.width = progress + '%';
+                value.textContent = progress.toFixed(1) + '%';
+
+                if (isActive && isOpen) {
+                    badge.style.display = 'inline-block';
+                    fill.classList.add('active');
+                } else {
+                    badge.style.display = 'none';
+                    fill.classList.remove('active');
+                }
+            }
+
+            // Update time
+            const timeStr = et.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateStr = et.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            document.getElementById('currentTime').textContent = dateStr + ' - ' + timeStr;
+        }
+
+        update();
+        setInterval(update, 1000);
+    </script>
+</body>
+</html>
