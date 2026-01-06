@@ -174,12 +174,117 @@
             font-size: 0.75rem;
             margin-left: 8px;
         }
+
+        /* Candle Countdown Styles */
+        .candle-dropdown {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .candle-dropdown.visible {
+            display: block;
+        }
+
+        .candle-toggle {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(100, 255, 218, 0.1);
+            border: none;
+            color: #64ffda;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .candle-toggle:hover {
+            background: rgba(100, 255, 218, 0.2);
+        }
+
+        .candle-toggle .arrow {
+            transition: transform 0.2s;
+        }
+
+        .candle-toggle.expanded .arrow {
+            transform: rotate(180deg);
+        }
+
+        .candle-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .candle-content.expanded {
+            padding: 15px;
+            max-height: 400px;
+        }
+
+        .candle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .candle-row:last-child {
+            border-bottom: none;
+        }
+
+        .candle-label {
+            color: #8892b0;
+            font-size: 0.85rem;
+            font-weight: 600;
+            min-width: 40px;
+        }
+
+        .candle-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            margin-left: 15px;
+        }
+
+        .candle-count {
+            color: #ccd6f6;
+            font-size: 0.8rem;
+            min-width: 100px;
+        }
+
+        .candle-next {
+            color: #64ffda;
+            font-size: 0.8rem;
+            min-width: 120px;
+        }
+
+        .candle-progress {
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .candle-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #64ffda, #4facfe);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Futures Market Week Tracker</h1>
-        <p class="subtitle">Sunday 5:00 PM ET - Friday 5:00 PM ET (120 Hours)</p>
+        <p class="subtitle">Sunday 5:00 PM CT - Friday 4:00 PM CT (119 Hours)</p>
 
         <div id="marketStatus" class="market-status market-open">
             Market Open
@@ -190,104 +295,240 @@
             <div class="week-percentage-label">of trading week complete</div>
         </div>
 
-        <div class="progress-item bar-1">
+        <div class="progress-item bar-1" id="bar1">
             <div class="progress-header">
-                <span class="progress-label">Sunday 5PM - Monday 5PM<span class="now-badge" id="badge1" style="display:none">NOW</span></span>
+                <span class="progress-label">Sunday 5PM - Monday 5PM CT<span class="now-badge" id="badge1" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value1">0%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="fill1" style="width: 0%"></div>
             </div>
+            <div class="candle-dropdown" id="dropdown1"></div>
         </div>
 
-        <div class="progress-item bar-2">
+        <div class="progress-item bar-2" id="bar2">
             <div class="progress-header">
-                <span class="progress-label">Monday 5PM - Tuesday 5PM<span class="now-badge" id="badge2" style="display:none">NOW</span></span>
+                <span class="progress-label">Monday 5PM - Tuesday 5PM CT<span class="now-badge" id="badge2" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value2">0%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="fill2" style="width: 0%"></div>
             </div>
+            <div class="candle-dropdown" id="dropdown2"></div>
         </div>
 
-        <div class="progress-item bar-3">
+        <div class="progress-item bar-3" id="bar3">
             <div class="progress-header">
-                <span class="progress-label">Tuesday 5PM - Wednesday 5PM<span class="now-badge" id="badge3" style="display:none">NOW</span></span>
+                <span class="progress-label">Tuesday 5PM - Wednesday 5PM CT<span class="now-badge" id="badge3" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value3">0%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="fill3" style="width: 0%"></div>
             </div>
+            <div class="candle-dropdown" id="dropdown3"></div>
         </div>
 
-        <div class="progress-item bar-4">
+        <div class="progress-item bar-4" id="bar4">
             <div class="progress-header">
-                <span class="progress-label">Wednesday 5PM - Thursday 5PM<span class="now-badge" id="badge4" style="display:none">NOW</span></span>
+                <span class="progress-label">Wednesday 5PM - Thursday 5PM CT<span class="now-badge" id="badge4" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value4">0%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="fill4" style="width: 0%"></div>
             </div>
+            <div class="candle-dropdown" id="dropdown4"></div>
         </div>
 
-        <div class="progress-item bar-5">
+        <div class="progress-item bar-5" id="bar5">
             <div class="progress-header">
-                <span class="progress-label">Thursday 5PM - Friday 5PM<span class="now-badge" id="badge5" style="display:none">NOW</span></span>
+                <span class="progress-label">Thursday 5PM - Friday 4PM CT<span class="now-badge" id="badge5" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value5">0%</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="fill5" style="width: 0%"></div>
             </div>
+            <div class="candle-dropdown" id="dropdown5"></div>
         </div>
 
         <div class="time-info">
             <div class="current-time" id="currentTime">--</div>
-            <div>Eastern Time (ET)</div>
+            <div>Central Time (CT)</div>
         </div>
     </div>
 
     <script>
-        const MARKET_OPEN_HOUR = 17; // 5 PM ET
+        const MARKET_OPEN_HOUR = 17; // 5 PM CT
+        const MARKET_CLOSE_HOUR = 16; // 4 PM CT on Friday
 
-        function getEasternTime() {
+        // Bar durations in milliseconds
+        const MS_PER_HOUR = 60 * 60 * 1000;
+        const BAR_DURATIONS = [
+            24 * MS_PER_HOUR, // Bar 1: Sun 5PM - Mon 5PM (24h)
+            24 * MS_PER_HOUR, // Bar 2: Mon 5PM - Tue 5PM (24h)
+            24 * MS_PER_HOUR, // Bar 3: Tue 5PM - Wed 5PM (24h)
+            24 * MS_PER_HOUR, // Bar 4: Wed 5PM - Thu 5PM (24h)
+            23 * MS_PER_HOUR  // Bar 5: Thu 5PM - Fri 4PM (23h)
+        ];
+        const TOTAL_MS = BAR_DURATIONS.reduce((a, b) => a + b, 0); // 119 hours
+
+        // Candle timeframes in minutes
+        const TIMEFRAMES = [
+            { label: '4H', minutes: 240 },
+            { label: '1H', minutes: 60 },
+            { label: '30M', minutes: 30 },
+            { label: '15M', minutes: 15 },
+            { label: '5M', minutes: 5 },
+            { label: '1M', minutes: 1 }
+        ];
+
+        let expandedDropdown = null;
+
+        function getCentralTime() {
             const now = new Date();
-            return new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+            return new Date(now.toLocaleString("en-US", { timeZone: "America/Chicago" }));
         }
 
-        function getWeekStart(et) {
-            const day = et.getDay();
-            const hour = et.getHours();
+        function getWeekStart(ct) {
+            const day = ct.getDay();
+            const hour = ct.getHours();
 
             let daysBack = day;
             if (day === 0 && hour < MARKET_OPEN_HOUR) daysBack = 7;
             if (day === 6) daysBack = 6;
 
-            const weekStart = new Date(et);
-            weekStart.setDate(et.getDate() - daysBack);
+            const weekStart = new Date(ct);
+            weekStart.setDate(ct.getDate() - daysBack);
             weekStart.setHours(MARKET_OPEN_HOUR, 0, 0, 0);
             return weekStart;
         }
 
-        function isMarketOpen(et) {
-            const day = et.getDay();
-            const time = et.getHours() + et.getMinutes() / 60;
+        function isMarketOpen(ct) {
+            const day = ct.getDay();
+            const time = ct.getHours() + ct.getMinutes() / 60;
 
-            if (day === 6) return false;
-            if (day === 0 && time < MARKET_OPEN_HOUR) return false;
-            if (day === 5 && time >= MARKET_OPEN_HOUR) return false;
+            if (day === 6) return false; // Saturday
+            if (day === 0 && time < MARKET_OPEN_HOUR) return false; // Sunday before 5PM
+            if (day === 5 && time >= MARKET_CLOSE_HOUR) return false; // Friday after 4PM
             return true;
         }
 
+        function getBarStartEnd(barIndex, weekStart) {
+            let startMs = 0;
+            for (let i = 0; i < barIndex; i++) {
+                startMs += BAR_DURATIONS[i];
+            }
+            const endMs = startMs + BAR_DURATIONS[barIndex];
+            return {
+                start: weekStart.getTime() + startMs,
+                end: weekStart.getTime() + endMs,
+                duration: BAR_DURATIONS[barIndex]
+            };
+        }
+
+        function formatTime(ms) {
+            if (ms <= 0) return '0s';
+            const hours = Math.floor(ms / (60 * 60 * 1000));
+            const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+            const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+
+        function calculateCandleInfo(ct, barEnd) {
+            const now = ct.getTime();
+            const remainingMs = Math.max(0, barEnd - now);
+            const remainingMinutes = remainingMs / (60 * 1000);
+
+            return TIMEFRAMES.map(tf => {
+                const candlesRemaining = Math.ceil(remainingMinutes / tf.minutes);
+
+                // Calculate time until next candle closes
+                // Candles close at regular intervals from market open
+                const msPerCandle = tf.minutes * 60 * 1000;
+                const msSinceEpoch = now;
+                const msIntoCurrentCandle = msSinceEpoch % msPerCandle;
+                const msUntilNextClose = msPerCandle - msIntoCurrentCandle;
+
+                // Progress of current candle
+                const candleProgress = (msIntoCurrentCandle / msPerCandle) * 100;
+
+                return {
+                    label: tf.label,
+                    remaining: candlesRemaining,
+                    nextCloseMs: msUntilNextClose,
+                    progress: candleProgress
+                };
+            });
+        }
+
+        function createDropdownContent(barIndex, candleInfo) {
+            const toggleId = `toggle${barIndex + 1}`;
+            const contentId = `content${barIndex + 1}`;
+
+            let html = `
+                <button class="candle-toggle" id="${toggleId}" onclick="toggleDropdown(${barIndex + 1})">
+                    <span class="arrow">▼</span>
+                    Candle Countdown
+                </button>
+                <div class="candle-content" id="${contentId}">
+            `;
+
+            candleInfo.forEach(candle => {
+                html += `
+                    <div class="candle-row">
+                        <span class="candle-label">${candle.label}</span>
+                        <div class="candle-info">
+                            <span class="candle-count">${candle.remaining} candle${candle.remaining !== 1 ? 's' : ''} left</span>
+                            <span class="candle-next">Next: ${formatTime(candle.nextCloseMs)}</span>
+                            <div class="candle-progress">
+                                <div class="candle-progress-fill" style="width: ${candle.progress}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            return html;
+        }
+
+        function toggleDropdown(barIndex) {
+            const toggle = document.getElementById(`toggle${barIndex}`);
+            const content = document.getElementById(`content${barIndex}`);
+
+            if (expandedDropdown === barIndex) {
+                toggle.classList.remove('expanded');
+                content.classList.remove('expanded');
+                expandedDropdown = null;
+            } else {
+                // Close any open dropdown
+                if (expandedDropdown !== null) {
+                    const prevToggle = document.getElementById(`toggle${expandedDropdown}`);
+                    const prevContent = document.getElementById(`content${expandedDropdown}`);
+                    if (prevToggle) prevToggle.classList.remove('expanded');
+                    if (prevContent) prevContent.classList.remove('expanded');
+                }
+
+                toggle.classList.add('expanded');
+                content.classList.add('expanded');
+                expandedDropdown = barIndex;
+            }
+        }
+
         function update() {
-            const et = getEasternTime();
-            const weekStart = getWeekStart(et);
-            const elapsed = Math.max(0, et.getTime() - weekStart.getTime());
+            const ct = getCentralTime();
+            const weekStart = getWeekStart(ct);
+            const now = ct.getTime();
+            const elapsed = Math.max(0, Math.min(TOTAL_MS, now - weekStart.getTime()));
 
-            const msPerBar = 24 * 60 * 60 * 1000;
-            const totalMs = 5 * msPerBar;
-            const weekPercent = Math.min(100, (elapsed / totalMs) * 100);
-
-            const isOpen = isMarketOpen(et);
+            const weekPercent = (elapsed / TOTAL_MS) * 100;
+            const isOpen = isMarketOpen(ct);
 
             // Update market status
             const statusEl = document.getElementById('marketStatus');
@@ -297,24 +538,29 @@
             // Update week percentage
             document.getElementById('weekPercentage').textContent = weekPercent.toFixed(1) + '%';
 
+            // Track cumulative elapsed time for bar calculations
+            let cumulativeMs = 0;
+
             // Update each bar
             for (let i = 0; i < 5; i++) {
-                const barStart = i * msPerBar;
-                const barEnd = (i + 1) * msPerBar;
+                const barDuration = BAR_DURATIONS[i];
+                const barStartMs = cumulativeMs;
+                const barEndMs = cumulativeMs + barDuration;
 
                 let progress = 0;
                 let isActive = false;
 
-                if (elapsed >= barEnd) {
+                if (elapsed >= barEndMs) {
                     progress = 100;
-                } else if (elapsed > barStart) {
-                    progress = ((elapsed - barStart) / msPerBar) * 100;
+                } else if (elapsed > barStartMs) {
+                    progress = ((elapsed - barStartMs) / barDuration) * 100;
                     isActive = true;
                 }
 
                 const fill = document.getElementById('fill' + (i + 1));
                 const value = document.getElementById('value' + (i + 1));
                 const badge = document.getElementById('badge' + (i + 1));
+                const dropdown = document.getElementById('dropdown' + (i + 1));
 
                 fill.style.width = progress + '%';
                 value.textContent = progress.toFixed(1) + '%';
@@ -322,15 +568,33 @@
                 if (isActive && isOpen) {
                     badge.style.display = 'inline-block';
                     fill.classList.add('active');
+                    dropdown.classList.add('visible');
+
+                    // Calculate candle info for active bar
+                    const barEnd = weekStart.getTime() + barEndMs;
+                    const candleInfo = calculateCandleInfo(ct, barEnd);
+                    dropdown.innerHTML = createDropdownContent(i, candleInfo);
+
+                    // Restore expanded state if this was expanded
+                    if (expandedDropdown === i + 1) {
+                        const toggle = document.getElementById(`toggle${i + 1}`);
+                        const content = document.getElementById(`content${i + 1}`);
+                        if (toggle) toggle.classList.add('expanded');
+                        if (content) content.classList.add('expanded');
+                    }
                 } else {
                     badge.style.display = 'none';
                     fill.classList.remove('active');
+                    dropdown.classList.remove('visible');
+                    dropdown.innerHTML = '';
                 }
+
+                cumulativeMs += barDuration;
             }
 
             // Update time
-            const timeStr = et.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-            const dateStr = et.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+            const timeStr = ct.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const dateStr = ct.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
             document.getElementById('currentTime').textContent = dateStr + ' - ' + timeStr;
         }
 
