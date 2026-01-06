@@ -46,7 +46,7 @@
             border-radius: 24px;
             padding: 40px;
             width: 100%;
-            max-width: 750px;
+            max-width: 800px;
             box-shadow:
                 0 25px 50px rgba(0, 0, 0, 0.4),
                 0 0 0 1px rgba(255, 255, 255, 0.05),
@@ -68,15 +68,81 @@
         .subtitle {
             color: rgba(136, 146, 176, 0.9);
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             font-size: 0.9rem;
             font-weight: 400;
             letter-spacing: 0.3px;
         }
 
+        /* Current Session Indicator */
+        .current-session {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .session-label {
+            color: rgba(136, 146, 176, 0.8);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .session-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .session-asian {
+            background: rgba(79, 172, 254, 0.2);
+            color: #4facfe;
+        }
+
+        .session-london {
+            background: rgba(255, 170, 100, 0.2);
+            color: #ffaa64;
+        }
+
+        .session-newyork {
+            background: rgba(100, 255, 136, 0.2);
+            color: #64ff88;
+        }
+
+        .session-overlap {
+            background: linear-gradient(90deg, rgba(255, 170, 100, 0.2), rgba(100, 255, 136, 0.2));
+            color: #fff;
+        }
+
+        .session-asian-london {
+            background: linear-gradient(90deg, rgba(79, 172, 254, 0.2), rgba(255, 170, 100, 0.2));
+            color: #fff;
+        }
+
+        .session-closed {
+            background: rgba(136, 146, 176, 0.1);
+            color: rgba(136, 146, 176, 0.7);
+        }
+
+        .session-killzone {
+            animation: killzone-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes killzone-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 200, 100, 0.4); }
+            50% { box-shadow: 0 0 15px 2px rgba(255, 200, 100, 0.6); }
+        }
+
         .market-status {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             padding: 14px 24px;
             border-radius: 16px;
             font-weight: 600;
@@ -109,7 +175,7 @@
 
         .week-summary {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             padding: 20px;
             background: linear-gradient(135deg, rgba(100, 255, 218, 0.08) 0%, rgba(100, 200, 255, 0.05) 100%);
             border-radius: 16px;
@@ -134,12 +200,49 @@
             font-weight: 400;
         }
 
+        /* Session Legend */
+        .session-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.7rem;
+            color: rgba(136, 146, 176, 0.8);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-asian { background: rgba(79, 172, 254, 0.5); }
+        .legend-london { background: rgba(255, 170, 100, 0.5); }
+        .legend-newyork { background: rgba(100, 255, 136, 0.5); }
+        .legend-killzone {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 200, 100, 0.6),
+                rgba(255, 200, 100, 0.6) 2px,
+                rgba(255, 200, 100, 0.3) 2px,
+                rgba(255, 200, 100, 0.3) 4px
+            );
+            border: 1px solid rgba(255, 200, 100, 0.8);
+        }
+
         /* Weekly Countdown Card */
         .weekly-countdown {
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.08) 100%);
             border-radius: 16px;
             padding: 20px;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             box-shadow:
                 0 4px 20px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -205,7 +308,7 @@
         }
 
         .progress-item {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             transition: all 0.3s ease;
         }
 
@@ -232,13 +335,62 @@
 
         .progress-bar-container {
             position: relative;
-            height: 28px;
+            height: 32px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow:
                 inset 0 2px 4px rgba(0, 0, 0, 0.3),
                 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* Session Overlays */
+        .session-overlays {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .session-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .session-overlay.asian {
+            background: rgba(79, 172, 254, 0.15);
+        }
+
+        .session-overlay.london {
+            background: rgba(255, 170, 100, 0.15);
+        }
+
+        .session-overlay.newyork {
+            background: rgba(100, 255, 136, 0.15);
+        }
+
+        /* Kill Zone Highlights */
+        .killzone-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 200, 100, 0.1),
+                rgba(255, 200, 100, 0.1) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            border-top: 2px solid rgba(255, 200, 100, 0.6);
+            border-bottom: 2px solid rgba(255, 200, 100, 0.6);
+            box-shadow: inset 0 0 10px rgba(255, 200, 100, 0.3);
         }
 
         .progress-segments {
@@ -249,7 +401,7 @@
             bottom: 0;
             display: flex;
             pointer-events: none;
-            z-index: 2;
+            z-index: 3;
         }
 
         .segment-divider {
@@ -260,17 +412,6 @@
 
         .segment-divider:last-child {
             border-right: none;
-        }
-
-        .segment-divider::after {
-            content: attr(data-time);
-            position: absolute;
-            bottom: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.6rem;
-            color: rgba(136, 146, 176, 0.5);
-            white-space: nowrap;
         }
 
         .segment-tick {
@@ -284,11 +425,11 @@
 
         .progress-fill {
             height: 100%;
-            border-radius: 14px;
+            border-radius: 16px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
-            z-index: 1;
+            z-index: 2;
         }
 
         .progress-fill::before {
@@ -299,7 +440,7 @@
             right: 0;
             height: 50%;
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
-            border-radius: 14px 14px 0 0;
+            border-radius: 16px 16px 0 0;
         }
 
         .progress-fill.active::after {
@@ -362,7 +503,7 @@
             text-align: center;
             color: rgba(136, 146, 176, 0.8);
             font-size: 0.85rem;
-            margin-top: 28px;
+            margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -396,7 +537,7 @@
 
         /* Candle Countdown Styles */
         .candle-dropdown {
-            margin-top: 12px;
+            margin-top: 10px;
             background: rgba(0, 0, 0, 0.25);
             border-radius: 14px;
             overflow: hidden;
@@ -525,6 +666,14 @@
                 font-size: 0.5rem;
             }
 
+            .session-legend {
+                gap: 10px;
+            }
+
+            .legend-item {
+                font-size: 0.6rem;
+            }
+
             .candle-info {
                 gap: 8px;
             }
@@ -532,6 +681,11 @@
             .candle-count, .candle-next {
                 font-size: 0.7rem;
                 min-width: auto;
+            }
+
+            .current-session {
+                flex-direction: column;
+                gap: 6px;
             }
         }
     </style>
@@ -545,9 +699,35 @@
             Market Open
         </div>
 
+        <!-- Current Session Indicator -->
+        <div class="current-session">
+            <span class="session-label">Currently:</span>
+            <span class="session-value session-closed" id="currentSession">Between Sessions</span>
+        </div>
+
         <div class="week-summary">
             <div class="week-percentage" id="weekPercentage">0%</div>
             <div class="week-percentage-label">of trading week complete</div>
+        </div>
+
+        <!-- Session Legend -->
+        <div class="session-legend">
+            <div class="legend-item">
+                <div class="legend-color legend-asian"></div>
+                <span>Asian (6PM-3AM)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-london"></div>
+                <span>London (2AM-11AM)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-newyork"></div>
+                <span>New York (8AM-5PM)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color legend-killzone"></div>
+                <span>Kill Zone</span>
+            </div>
         </div>
 
         <!-- Weekly Countdown Section -->
@@ -593,6 +773,7 @@
                 <span class="progress-value" id="value1">0%</span>
             </div>
             <div class="progress-bar-container">
+                <div class="session-overlays" id="sessions1"></div>
                 <div class="progress-segments" id="segments1"></div>
                 <div class="progress-fill" id="fill1" style="width: 0%"></div>
             </div>
@@ -606,6 +787,7 @@
                 <span class="progress-value" id="value2">0%</span>
             </div>
             <div class="progress-bar-container">
+                <div class="session-overlays" id="sessions2"></div>
                 <div class="progress-segments" id="segments2"></div>
                 <div class="progress-fill" id="fill2" style="width: 0%"></div>
             </div>
@@ -619,6 +801,7 @@
                 <span class="progress-value" id="value3">0%</span>
             </div>
             <div class="progress-bar-container">
+                <div class="session-overlays" id="sessions3"></div>
                 <div class="progress-segments" id="segments3"></div>
                 <div class="progress-fill" id="fill3" style="width: 0%"></div>
             </div>
@@ -632,6 +815,7 @@
                 <span class="progress-value" id="value4">0%</span>
             </div>
             <div class="progress-bar-container">
+                <div class="session-overlays" id="sessions4"></div>
                 <div class="progress-segments" id="segments4"></div>
                 <div class="progress-fill" id="fill4" style="width: 0%"></div>
             </div>
@@ -645,6 +829,7 @@
                 <span class="progress-value" id="value5">0%</span>
             </div>
             <div class="progress-bar-container">
+                <div class="session-overlays" id="sessions5"></div>
                 <div class="progress-segments" id="segments5"></div>
                 <div class="progress-fill" id="fill5" style="width: 0%"></div>
             </div>
@@ -664,25 +849,50 @@
 
         const MS_PER_HOUR = 60 * 60 * 1000;
         const BAR_DURATIONS = [
-            24 * MS_PER_HOUR, // Bar 1: Sun 5PM - Mon 5PM (24h)
-            24 * MS_PER_HOUR, // Bar 2: Mon 5PM - Tue 5PM (24h)
-            24 * MS_PER_HOUR, // Bar 3: Tue 5PM - Wed 5PM (24h)
-            24 * MS_PER_HOUR, // Bar 4: Wed 5PM - Thu 5PM (24h)
-            23 * MS_PER_HOUR  // Bar 5: Thu 5PM - Fri 4PM (23h)
+            24 * MS_PER_HOUR,
+            24 * MS_PER_HOUR,
+            24 * MS_PER_HOUR,
+            24 * MS_PER_HOUR,
+            23 * MS_PER_HOUR
         ];
         const TOTAL_MS = BAR_DURATIONS.reduce((a, b) => a + b, 0);
 
-        // 4-hour segment times for each bar
         const BAR_SEGMENT_TIMES = [
-            ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'], // Bar 1-4 (24h bars)
             ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
             ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
             ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
-            ['5PM', '9PM', '1AM', '5AM', '9AM', '12P'] // Bar 5: last segment is 3h (9AM-12PM then 12PM-4PM is partial)
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '12P']
         ];
 
-        // Number of 4-hour segments per bar (bar 5 has 5 full + 1 partial = ~5.75 segments)
-        const BAR_SEGMENTS = [6, 6, 6, 6, 5.75];
+        // Sessions relative to bar start (5PM)
+        // Hours into bar: Asian 1-10h, London 9-18h, NY 15-24h
+        // For 24h bar: percentages calculated as hours/24*100
+        const SESSIONS_24H = {
+            asian: { start: 1/24*100, end: 10/24*100 },      // 6PM-3AM = 1h to 10h
+            london: { start: 9/24*100, end: 18/24*100 },     // 2AM-11AM = 9h to 18h
+            newyork: { start: 15/24*100, end: 24/24*100 }    // 8AM-5PM = 15h to 24h
+        };
+
+        // For 23h bar (Fri): scale by 24/23
+        const SESSIONS_23H = {
+            asian: { start: 1/23*100, end: 10/23*100 },
+            london: { start: 9/23*100, end: 18/23*100 },
+            newyork: { start: 15/23*100, end: 23/23*100 }
+        };
+
+        // Kill zones
+        const KILLZONES_24H = {
+            londonOpen: { start: 9/24*100, end: 12/24*100 },   // 2AM-5AM
+            nyOpen: { start: 15/24*100, end: 18/24*100 },      // 8AM-11AM
+            londonClose: { start: 18/24*100, end: 19/24*100 }  // 11AM-12PM
+        };
+
+        const KILLZONES_23H = {
+            londonOpen: { start: 9/23*100, end: 12/23*100 },
+            nyOpen: { start: 15/23*100, end: 18/23*100 },
+            londonClose: { start: 18/23*100, end: 19/23*100 }
+        };
 
         const TIMEFRAMES = [
             { label: '4H', minutes: 240 },
@@ -724,6 +934,34 @@
             return true;
         }
 
+        function getCurrentSession(ct) {
+            const hour = ct.getHours();
+            const time = hour + ct.getMinutes() / 60;
+
+            // Session times in CT
+            const asian = time >= 18 || time < 3;      // 6PM - 3AM
+            const london = time >= 2 && time < 11;      // 2AM - 11AM
+            const newyork = time >= 8 && time < 17;     // 8AM - 5PM
+
+            // Kill zones
+            const londonOpenKZ = time >= 2 && time < 5;    // 2AM - 5AM
+            const nyOpenKZ = time >= 8 && time < 11;       // 8AM - 11AM
+            const londonCloseKZ = time >= 11 && time < 12; // 11AM - 12PM
+
+            let sessions = [];
+            let killzone = null;
+
+            if (asian) sessions.push('Asian');
+            if (london) sessions.push('London');
+            if (newyork) sessions.push('New York');
+
+            if (londonOpenKZ) killzone = 'London Open KZ';
+            else if (nyOpenKZ) killzone = 'NY Open KZ';
+            else if (londonCloseKZ) killzone = 'London Close KZ';
+
+            return { sessions, killzone };
+        }
+
         function formatTime(ms) {
             if (ms <= 0) return '0s';
             const hours = Math.floor(ms / (60 * 60 * 1000));
@@ -735,20 +973,51 @@
             return `${seconds}s`;
         }
 
+        function initializeSessionOverlays() {
+            for (let i = 0; i < 5; i++) {
+                const container = document.getElementById(`sessions${i + 1}`);
+                const is23h = i === 4;
+                const sessions = is23h ? SESSIONS_23H : SESSIONS_24H;
+                const killzones = is23h ? KILLZONES_23H : KILLZONES_24H;
+
+                container.innerHTML = '';
+
+                // Add session overlays
+                ['asian', 'london', 'newyork'].forEach(session => {
+                    const overlay = document.createElement('div');
+                    overlay.className = `session-overlay ${session}`;
+                    overlay.style.left = `${sessions[session].start}%`;
+                    overlay.style.width = `${sessions[session].end - sessions[session].start}%`;
+                    container.appendChild(overlay);
+                });
+
+                // Add kill zone overlays
+                ['londonOpen', 'nyOpen', 'londonClose'].forEach(kz => {
+                    // Skip London Close on Friday if it's past market close
+                    if (is23h && kz === 'londonClose' && killzones[kz].start > 78) return;
+
+                    const overlay = document.createElement('div');
+                    overlay.className = 'killzone-overlay';
+                    overlay.style.left = `${killzones[kz].start}%`;
+                    overlay.style.width = `${killzones[kz].end - killzones[kz].start}%`;
+                    container.appendChild(overlay);
+                });
+            }
+        }
+
         function initializeSegments() {
             for (let i = 0; i < 5; i++) {
                 const segmentsContainer = document.getElementById(`segments${i + 1}`);
                 const labelsContainer = document.getElementById(`labels${i + 1}`);
                 const times = BAR_SEGMENT_TIMES[i];
-                const numSegments = i === 4 ? 6 : 6; // 6 visual segments for all
 
                 segmentsContainer.innerHTML = '';
                 labelsContainer.innerHTML = '';
 
-                for (let j = 0; j < numSegments; j++) {
+                for (let j = 0; j < 6; j++) {
                     const segment = document.createElement('div');
                     segment.className = 'segment-divider';
-                    if (j < numSegments - 1) {
+                    if (j < 5) {
                         const tick = document.createElement('div');
                         tick.className = 'segment-tick';
                         segment.appendChild(tick);
@@ -852,6 +1121,40 @@
             }
         }
 
+        function updateCurrentSession(ct, isOpen) {
+            const sessionEl = document.getElementById('currentSession');
+            const { sessions, killzone } = getCurrentSession(ct);
+
+            if (!isOpen) {
+                sessionEl.textContent = 'Market Closed';
+                sessionEl.className = 'session-value session-closed';
+                return;
+            }
+
+            if (sessions.length === 0) {
+                sessionEl.textContent = 'Between Sessions';
+                sessionEl.className = 'session-value session-closed';
+            } else if (sessions.length === 1) {
+                const session = sessions[0];
+                let text = `${session} Session`;
+                if (killzone) text += ` (${killzone})`;
+                sessionEl.textContent = text;
+                sessionEl.className = `session-value session-${session.toLowerCase().replace(' ', '')}`;
+                if (killzone) sessionEl.classList.add('session-killzone');
+            } else {
+                let text = sessions.join(' / ') + ' Overlap';
+                if (killzone) text += ` (${killzone})`;
+                sessionEl.textContent = text;
+
+                if (sessions.includes('Asian') && sessions.includes('London')) {
+                    sessionEl.className = 'session-value session-asian-london';
+                } else {
+                    sessionEl.className = 'session-value session-overlap';
+                }
+                if (killzone) sessionEl.classList.add('session-killzone');
+            }
+        }
+
         function update() {
             const ct = getCentralTime();
             const weekStart = getWeekStart(ct);
@@ -867,6 +1170,9 @@
             statusEl.textContent = isOpen ? 'Market Open' : 'Market Closed';
             statusEl.className = 'market-status ' + (isOpen ? 'market-open' : 'market-closed');
 
+            // Update current session
+            updateCurrentSession(ct, isOpen);
+
             // Update week percentage
             document.getElementById('weekPercentage').textContent = weekPercent.toFixed(1) + '%';
 
@@ -879,7 +1185,6 @@
             document.getElementById('weekly5m').textContent = weeklyCandles['5m'];
             document.getElementById('weekly1m').textContent = weeklyCandles['1m'];
 
-            // Track cumulative elapsed time
             let cumulativeMs = 0;
 
             for (let i = 0; i < 5; i++) {
@@ -930,13 +1235,13 @@
                 cumulativeMs += barDuration;
             }
 
-            // Update time
             const timeStr = ct.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
             const dateStr = ct.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
             document.getElementById('currentTime').textContent = dateStr + ' - ' + timeStr;
         }
 
         // Initialize
+        initializeSessionOverlays();
         initializeSegments();
         update();
         setInterval(update, 1000);
