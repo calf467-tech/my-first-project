@@ -87,17 +87,6 @@
             overflow: hidden;
             position: relative;
         }
-        .bar-segments {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            z-index: 2;
-        }
-        .bar-seg {
-            flex: 1;
-            border-right: 1px solid rgba(255,255,255,0.1);
-        }
-        .bar-seg:last-child { border: none; }
 
         .bar-fill {
             height: 100%;
@@ -112,8 +101,13 @@
         .bar-4 .bar-fill { background: linear-gradient(90deg, #43e97b, #38f9d7); }
         .bar-5 .bar-fill { background: linear-gradient(90deg, #fa709a, #fee140); }
 
-        .bar-times { display: flex; margin-top: 4px; }
-        .bar-times span { flex: 1; text-align: center; font-size: 0.55rem; color: #8892b099; }
+        .bar-times {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+            padding: 0 2px;
+        }
+        .bar-times span { font-size: 0.55rem; color: #8892b099; }
 
         .time-display {
             text-align: center;
@@ -142,7 +136,18 @@
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-        .candle-content.open { max-height: 300px; padding: 12px 0; }
+        .candle-content.open { max-height: 350px; padding: 12px 0; }
+        .time-remaining {
+            background: rgba(100,255,218,0.1);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .time-remaining .lbl { color: #8892b0; font-size: 0.75rem; }
+        .time-remaining .val { color: #64ffda; font-size: 0.9rem; font-weight: 600; }
         .candle-row {
             display: flex;
             justify-content: space-between;
@@ -159,7 +164,7 @@
 <body>
     <div class="container">
         <h1>Futures Market Week Tracker</h1>
-        <p class="subtitle">Sunday 5PM CT - Friday 4PM CT (119 Hours)</p>
+        <p class="subtitle">Sunday 5PM CT - Friday 4PM CT (115 Hours)</p>
 
         <div class="status" id="status">Market Open</div>
 
@@ -183,13 +188,13 @@
 
     <script>
         const BARS = [
-            { label: 'Sunday 5PM - Monday 5PM', hours: 24 },
-            { label: 'Monday 5PM - Tuesday 5PM', hours: 24 },
-            { label: 'Tuesday 5PM - Wednesday 5PM', hours: 24 },
-            { label: 'Wednesday 5PM - Thursday 5PM', hours: 24 },
-            { label: 'Thursday 5PM - Friday 4PM', hours: 23 }
+            { label: 'Sunday 5PM - Monday 4PM CT', hours: 23 },
+            { label: 'Monday 5PM - Tuesday 4PM CT', hours: 23 },
+            { label: 'Tuesday 5PM - Wednesday 4PM CT', hours: 23 },
+            { label: 'Wednesday 5PM - Thursday 4PM CT', hours: 23 },
+            { label: 'Thursday 5PM - Friday 4PM CT', hours: 23 }
         ];
-        const TIMES = ['5PM','9PM','1AM','5AM','9AM','1PM'];
+        const TIMES = ['5PM','9PM','1AM','5AM','9AM','1PM','4PM'];
         const TFS = [{l:'4H',m:240},{l:'1H',m:60},{l:'30M',m:30},{l:'15M',m:15},{l:'5M',m:5},{l:'1M',m:1}];
         const MS_HR = 3600000;
         const TOTAL_MS = BARS.reduce((a,b) => a + b.hours * MS_HR, 0);
@@ -212,14 +217,24 @@
         }
 
         function isOpen(ct) {
-            const d = ct.getDay(), t = ct.getHours() + ct.getMinutes()/60;
+            const d = ct.getDay(), h = ct.getHours(), t = h + ct.getMinutes()/60;
             if (d === 6) return false;
             if (d === 0 && t < 17) return false;
             if (d === 5 && t >= 16) return false;
+            // Daily break: 4PM-5PM CT (hour 16)
+            if (h === 16 && d >= 1 && d <= 4) return false;
             return true;
         }
 
         function fmt(ms) {
+            if (ms <= 0) return '0s';
+            const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000);
+            if (h > 0) return `${h}h ${m}m ${s}s`;
+            if (m > 0) return `${m}m ${s}s`;
+            return `${s}s`;
+        }
+
+        function fmtShort(ms) {
             if (ms <= 0) return '0s';
             const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000);
             if (h > 0) return `${h}h ${m}m`;
@@ -228,7 +243,6 @@
         }
 
         function init() {
-            // Weekly candles grid
             const wc = document.getElementById('weeklyCandles');
             wc.innerHTML = TFS.map(tf => `
                 <div class="countdown-item">
@@ -237,7 +251,6 @@
                 </div>
             `).join('');
 
-            // Bars
             const barsEl = document.getElementById('bars');
             barsEl.innerHTML = BARS.map((b,i) => `
                 <div class="bar-item bar-${i+1}">
@@ -246,7 +259,6 @@
                         <span class="bar-value" id="val${i}">0%</span>
                     </div>
                     <div class="bar-container">
-                        <div class="bar-segments">${'<div class="bar-seg"></div>'.repeat(6)}</div>
                         <div class="bar-fill" id="fill${i}"></div>
                     </div>
                     <div class="bar-times">${TIMES.map(t => `<span>${t}</span>`).join('')}</div>
@@ -277,21 +289,17 @@
             const pct = (elapsed / TOTAL_MS) * 100;
             const open = isOpen(ct);
 
-            // Status
             const st = document.getElementById('status');
             st.textContent = open ? 'Market Open' : 'Market Closed';
             st.className = 'status ' + (open ? 'open' : 'closed');
 
-            // Week pct
             document.getElementById('weekPct').textContent = pct.toFixed(1) + '%';
 
-            // Weekly candles
             const remMin = (TOTAL_MS - elapsed) / 60000;
             TFS.forEach(tf => {
                 document.getElementById(`wk${tf.l}`).textContent = Math.ceil(remMin / tf.m);
             });
 
-            // Bars
             let cumMs = 0;
             BARS.forEach((b, i) => {
                 const barMs = b.hours * MS_HR;
@@ -311,17 +319,27 @@
                 const dd = document.getElementById(`dd${i}`);
                 if (active && open) {
                     dd.classList.add('show');
-                    const barRemMin = (barEnd - elapsed) / 60000;
-                    document.getElementById(`cc${i}`).innerHTML = TFS.map(tf => {
+                    const barRemMs = barEnd * MS_HR / MS_HR - elapsed + cumMs * 0;
+                    const timeLeftMs = (barEnd - elapsed);
+                    const barRemMin = timeLeftMs / 60000;
+
+                    let html = `<div class="time-remaining">
+                        <span class="lbl">Time left today:</span>
+                        <span class="val">${fmt(timeLeftMs)}</span>
+                    </div>`;
+
+                    html += TFS.map(tf => {
                         const rem = Math.ceil(barRemMin / tf.m);
                         const msCandle = tf.m * 60000;
                         const msNext = msCandle - (ct.getTime() % msCandle);
                         return `<div class="candle-row">
                             <span class="tf">${tf.l}</span>
                             <span class="info">${rem} left</span>
-                            <span class="next">Next: ${fmt(msNext)}</span>
+                            <span class="next">Next: ${fmtShort(msNext)}</span>
                         </div>`;
                     }).join('');
+
+                    document.getElementById(`cc${i}`).innerHTML = html;
                 } else {
                     dd.classList.remove('show');
                 }
@@ -329,7 +347,6 @@
                 cumMs = barEnd;
             });
 
-            // Time
             document.getElementById('currentTime').textContent =
                 ct.toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric'}) +
                 ' - ' + ct.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
