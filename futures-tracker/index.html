@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futures Market Week Tracker</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         * {
             margin: 0;
             padding: 0;
@@ -12,114 +14,292 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(100, 255, 218, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
             padding: 40px;
             width: 100%;
-            max-width: 700px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 750px;
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
             color: #fff;
             text-align: center;
-            margin-bottom: 10px;
-            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-size: 1.9rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .subtitle {
-            color: #8892b0;
+            color: rgba(136, 146, 176, 0.9);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
             font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
         .market-status {
             text-align: center;
-            margin-bottom: 25px;
-            padding: 15px;
-            border-radius: 10px;
+            margin-bottom: 24px;
+            padding: 14px 24px;
+            border-radius: 16px;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.4s ease;
         }
 
         .market-open {
-            background: rgba(0, 255, 136, 0.15);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.15) 0%, rgba(0, 200, 100, 0.1) 100%);
             color: #00ff88;
+            box-shadow:
+                0 4px 15px rgba(0, 255, 136, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: pulse-green 2s ease-in-out infinite;
         }
 
         .market-closed {
-            background: rgba(255, 82, 82, 0.15);
+            background: linear-gradient(135deg, rgba(255, 82, 82, 0.15) 0%, rgba(200, 50, 50, 0.1) 100%);
             color: #ff5252;
+            box-shadow:
+                0 4px 15px rgba(255, 82, 82, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 4px 15px rgba(0, 255, 136, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 4px 25px rgba(0, 255, 136, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
         }
 
         .week-summary {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: rgba(100, 255, 218, 0.1);
-            border-radius: 10px;
+            margin-bottom: 28px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.08) 0%, rgba(100, 200, 255, 0.05) 100%);
+            border-radius: 16px;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .week-percentage {
             color: #64ffda;
-            font-size: 2rem;
+            font-size: 2.4rem;
             font-weight: 700;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(100, 255, 218, 0.4);
+            transition: all 0.3s ease;
         }
 
         .week-percentage-label {
-            color: #8892b0;
+            color: rgba(136, 146, 176, 0.8);
             font-size: 0.85rem;
-            margin-top: 5px;
+            margin-top: 6px;
+            font-weight: 400;
+        }
+
+        /* Weekly Countdown Card */
+        .weekly-countdown {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.08) 100%);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 28px;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .weekly-countdown-title {
+            color: #ccd6f6;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .weekly-countdown-title::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+        }
+
+        .weekly-countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .countdown-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .countdown-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .countdown-label {
+            color: rgba(136, 146, 176, 0.8);
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .countdown-value {
+            color: #64ffda;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .countdown-suffix {
+            color: rgba(136, 146, 176, 0.6);
+            font-size: 0.7rem;
+            margin-top: 2px;
         }
 
         .progress-item {
             margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
         .progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .progress-label {
             color: #ccd6f6;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 500;
+            letter-spacing: 0.2px;
         }
 
         .progress-value {
             color: #64ffda;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
+            transition: all 0.3s ease;
         }
 
-        .progress-bar {
-            height: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+        .progress-bar-container {
+            position: relative;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
             overflow: hidden;
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-segments {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .segment-divider {
+            flex: 1;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .segment-divider:last-child {
+            border-right: none;
+        }
+
+        .segment-divider::after {
+            content: attr(data-time);
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: rgba(136, 146, 176, 0.5);
+            white-space: nowrap;
+        }
+
+        .segment-tick {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .progress-fill {
             height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
+            border-radius: 14px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
+            z-index: 1;
+        }
+
+        .progress-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), transparent);
+            border-radius: 14px 14px 0 0;
         }
 
         .progress-fill.active::after {
@@ -143,45 +323,85 @@
             100% { transform: translateX(100%); }
         }
 
-        .bar-1 .progress-fill { background: linear-gradient(90deg, #667eea, #764ba2); }
-        .bar-2 .progress-fill { background: linear-gradient(90deg, #f093fb, #f5576c); }
-        .bar-3 .progress-fill { background: linear-gradient(90deg, #4facfe, #00f2fe); }
-        .bar-4 .progress-fill { background: linear-gradient(90deg, #43e97b, #38f9d7); }
-        .bar-5 .progress-fill { background: linear-gradient(90deg, #fa709a, #fee140); }
+        .bar-1 .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+        }
+        .bar-2 .progress-fill {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 0 20px rgba(240, 147, 251, 0.4);
+        }
+        .bar-3 .progress-fill {
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.4);
+        }
+        .bar-4 .progress-fill {
+            background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+            box-shadow: 0 0 20px rgba(67, 233, 123, 0.4);
+        }
+        .bar-5 .progress-fill {
+            background: linear-gradient(90deg, #fa709a 0%, #fee140 100%);
+            box-shadow: 0 0 20px rgba(250, 112, 154, 0.4);
+        }
+
+        .segment-labels {
+            display: flex;
+            margin-top: 6px;
+            padding: 0 2px;
+        }
+
+        .segment-label {
+            flex: 1;
+            text-align: center;
+            font-size: 0.6rem;
+            color: rgba(136, 146, 176, 0.5);
+            font-weight: 500;
+        }
 
         .time-info {
             text-align: center;
-            color: #8892b0;
+            color: rgba(136, 146, 176, 0.8);
             font-size: 0.85rem;
-            margin-top: 25px;
+            margin-top: 28px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .current-time {
             color: #ccd6f6;
             font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
         }
 
         .now-badge {
             display: inline-block;
-            background: rgba(100, 255, 218, 0.2);
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.25) 0%, rgba(100, 200, 255, 0.2) 100%);
             color: #64ffda;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            margin-left: 8px;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 10px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(100, 255, 218, 0.2);
+            animation: badge-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes badge-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         /* Candle Countdown Styles */
         .candle-dropdown {
-            margin-top: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
+            margin-top: 12px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 14px;
             overflow: hidden;
             display: none;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
         }
 
         .candle-dropdown.visible {
@@ -190,24 +410,27 @@
 
         .candle-toggle {
             width: 100%;
-            padding: 12px 15px;
-            background: rgba(100, 255, 218, 0.1);
+            padding: 14px 18px;
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(100, 200, 255, 0.08) 100%);
             border: none;
             color: #64ffda;
             font-size: 0.85rem;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .candle-toggle:hover {
-            background: rgba(100, 255, 218, 0.2);
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.15) 0%, rgba(100, 200, 255, 0.12) 100%);
         }
 
         .candle-toggle .arrow {
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
+            font-size: 0.7rem;
         }
 
         .candle-toggle.expanded .arrow {
@@ -218,11 +441,11 @@
             padding: 0;
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
         }
 
         .candle-content.expanded {
-            padding: 15px;
+            padding: 16px;
             max-height: 400px;
         }
 
@@ -230,8 +453,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.2s ease;
+        }
+
+        .candle-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
         }
 
         .candle-row:last-child {
@@ -239,8 +470,8 @@
         }
 
         .candle-label {
-            color: #8892b0;
-            font-size: 0.85rem;
+            color: rgba(136, 146, 176, 0.9);
+            font-size: 0.8rem;
             font-weight: 600;
             min-width: 40px;
         }
@@ -248,26 +479,26 @@
         .candle-info {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex: 1;
-            margin-left: 15px;
+            margin-left: 16px;
         }
 
         .candle-count {
             color: #ccd6f6;
-            font-size: 0.8rem;
-            min-width: 100px;
+            font-size: 0.78rem;
+            min-width: 95px;
         }
 
         .candle-next {
             color: #64ffda;
-            font-size: 0.8rem;
-            min-width: 120px;
+            font-size: 0.78rem;
+            min-width: 110px;
         }
 
         .candle-progress {
-            width: 60px;
-            height: 6px;
+            width: 50px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
             overflow: hidden;
@@ -278,6 +509,30 @@
             background: linear-gradient(90deg, #64ffda, #4facfe);
             border-radius: 3px;
             transition: width 0.5s ease;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px;
+            }
+
+            .weekly-countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .segment-label {
+                font-size: 0.5rem;
+            }
+
+            .candle-info {
+                gap: 8px;
+            }
+
+            .candle-count, .candle-next {
+                font-size: 0.7rem;
+                min-width: auto;
+            }
         }
     </style>
 </head>
@@ -295,14 +550,53 @@
             <div class="week-percentage-label">of trading week complete</div>
         </div>
 
+        <!-- Weekly Countdown Section -->
+        <div class="weekly-countdown">
+            <div class="weekly-countdown-title">Time Remaining This Week</div>
+            <div class="weekly-countdown-grid">
+                <div class="countdown-item">
+                    <div class="countdown-label">4H Candles</div>
+                    <div class="countdown-value" id="weekly4h">--</div>
+                    <div class="countdown-suffix">remaining</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-label">1H Candles</div>
+                    <div class="countdown-value" id="weekly1h">--</div>
+                    <div class="countdown-suffix">remaining</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-label">30M Candles</div>
+                    <div class="countdown-value" id="weekly30m">--</div>
+                    <div class="countdown-suffix">remaining</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-label">15M Candles</div>
+                    <div class="countdown-value" id="weekly15m">--</div>
+                    <div class="countdown-suffix">remaining</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-label">5M Candles</div>
+                    <div class="countdown-value" id="weekly5m">--</div>
+                    <div class="countdown-suffix">remaining</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-label">1M Candles</div>
+                    <div class="countdown-value" id="weekly1m">--</div>
+                    <div class="countdown-suffix">remaining</div>
+                </div>
+            </div>
+        </div>
+
         <div class="progress-item bar-1" id="bar1">
             <div class="progress-header">
                 <span class="progress-label">Sunday 5PM - Monday 5PM CT<span class="now-badge" id="badge1" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value1">0%</span>
             </div>
-            <div class="progress-bar">
+            <div class="progress-bar-container">
+                <div class="progress-segments" id="segments1"></div>
                 <div class="progress-fill" id="fill1" style="width: 0%"></div>
             </div>
+            <div class="segment-labels" id="labels1"></div>
             <div class="candle-dropdown" id="dropdown1"></div>
         </div>
 
@@ -311,9 +605,11 @@
                 <span class="progress-label">Monday 5PM - Tuesday 5PM CT<span class="now-badge" id="badge2" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value2">0%</span>
             </div>
-            <div class="progress-bar">
+            <div class="progress-bar-container">
+                <div class="progress-segments" id="segments2"></div>
                 <div class="progress-fill" id="fill2" style="width: 0%"></div>
             </div>
+            <div class="segment-labels" id="labels2"></div>
             <div class="candle-dropdown" id="dropdown2"></div>
         </div>
 
@@ -322,9 +618,11 @@
                 <span class="progress-label">Tuesday 5PM - Wednesday 5PM CT<span class="now-badge" id="badge3" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value3">0%</span>
             </div>
-            <div class="progress-bar">
+            <div class="progress-bar-container">
+                <div class="progress-segments" id="segments3"></div>
                 <div class="progress-fill" id="fill3" style="width: 0%"></div>
             </div>
+            <div class="segment-labels" id="labels3"></div>
             <div class="candle-dropdown" id="dropdown3"></div>
         </div>
 
@@ -333,9 +631,11 @@
                 <span class="progress-label">Wednesday 5PM - Thursday 5PM CT<span class="now-badge" id="badge4" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value4">0%</span>
             </div>
-            <div class="progress-bar">
+            <div class="progress-bar-container">
+                <div class="progress-segments" id="segments4"></div>
                 <div class="progress-fill" id="fill4" style="width: 0%"></div>
             </div>
+            <div class="segment-labels" id="labels4"></div>
             <div class="candle-dropdown" id="dropdown4"></div>
         </div>
 
@@ -344,9 +644,11 @@
                 <span class="progress-label">Thursday 5PM - Friday 4PM CT<span class="now-badge" id="badge5" style="display:none">NOW</span></span>
                 <span class="progress-value" id="value5">0%</span>
             </div>
-            <div class="progress-bar">
+            <div class="progress-bar-container">
+                <div class="progress-segments" id="segments5"></div>
                 <div class="progress-fill" id="fill5" style="width: 0%"></div>
             </div>
+            <div class="segment-labels" id="labels5"></div>
             <div class="candle-dropdown" id="dropdown5"></div>
         </div>
 
@@ -360,7 +662,6 @@
         const MARKET_OPEN_HOUR = 17; // 5 PM CT
         const MARKET_CLOSE_HOUR = 16; // 4 PM CT on Friday
 
-        // Bar durations in milliseconds
         const MS_PER_HOUR = 60 * 60 * 1000;
         const BAR_DURATIONS = [
             24 * MS_PER_HOUR, // Bar 1: Sun 5PM - Mon 5PM (24h)
@@ -369,9 +670,20 @@
             24 * MS_PER_HOUR, // Bar 4: Wed 5PM - Thu 5PM (24h)
             23 * MS_PER_HOUR  // Bar 5: Thu 5PM - Fri 4PM (23h)
         ];
-        const TOTAL_MS = BAR_DURATIONS.reduce((a, b) => a + b, 0); // 119 hours
+        const TOTAL_MS = BAR_DURATIONS.reduce((a, b) => a + b, 0);
 
-        // Candle timeframes in minutes
+        // 4-hour segment times for each bar
+        const BAR_SEGMENT_TIMES = [
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'], // Bar 1-4 (24h bars)
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '1PM'],
+            ['5PM', '9PM', '1AM', '5AM', '9AM', '12P'] // Bar 5: last segment is 3h (9AM-12PM then 12PM-4PM is partial)
+        ];
+
+        // Number of 4-hour segments per bar (bar 5 has 5 full + 1 partial = ~5.75 segments)
+        const BAR_SEGMENTS = [6, 6, 6, 6, 5.75];
+
         const TIMEFRAMES = [
             { label: '4H', minutes: 240 },
             { label: '1H', minutes: 60 },
@@ -406,23 +718,10 @@
             const day = ct.getDay();
             const time = ct.getHours() + ct.getMinutes() / 60;
 
-            if (day === 6) return false; // Saturday
-            if (day === 0 && time < MARKET_OPEN_HOUR) return false; // Sunday before 5PM
-            if (day === 5 && time >= MARKET_CLOSE_HOUR) return false; // Friday after 4PM
+            if (day === 6) return false;
+            if (day === 0 && time < MARKET_OPEN_HOUR) return false;
+            if (day === 5 && time >= MARKET_CLOSE_HOUR) return false;
             return true;
-        }
-
-        function getBarStartEnd(barIndex, weekStart) {
-            let startMs = 0;
-            for (let i = 0; i < barIndex; i++) {
-                startMs += BAR_DURATIONS[i];
-            }
-            const endMs = startMs + BAR_DURATIONS[barIndex];
-            return {
-                start: weekStart.getTime() + startMs,
-                end: weekStart.getTime() + endMs,
-                duration: BAR_DURATIONS[barIndex]
-            };
         }
 
         function formatTime(ms) {
@@ -431,12 +730,36 @@
             const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
             const seconds = Math.floor((ms % (60 * 1000)) / 1000);
 
-            if (hours > 0) {
-                return `${hours}h ${minutes}m`;
-            } else if (minutes > 0) {
-                return `${minutes}m ${seconds}s`;
-            } else {
-                return `${seconds}s`;
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            if (minutes > 0) return `${minutes}m ${seconds}s`;
+            return `${seconds}s`;
+        }
+
+        function initializeSegments() {
+            for (let i = 0; i < 5; i++) {
+                const segmentsContainer = document.getElementById(`segments${i + 1}`);
+                const labelsContainer = document.getElementById(`labels${i + 1}`);
+                const times = BAR_SEGMENT_TIMES[i];
+                const numSegments = i === 4 ? 6 : 6; // 6 visual segments for all
+
+                segmentsContainer.innerHTML = '';
+                labelsContainer.innerHTML = '';
+
+                for (let j = 0; j < numSegments; j++) {
+                    const segment = document.createElement('div');
+                    segment.className = 'segment-divider';
+                    if (j < numSegments - 1) {
+                        const tick = document.createElement('div');
+                        tick.className = 'segment-tick';
+                        segment.appendChild(tick);
+                    }
+                    segmentsContainer.appendChild(segment);
+
+                    const label = document.createElement('div');
+                    label.className = 'segment-label';
+                    label.textContent = times[j] || '';
+                    labelsContainer.appendChild(label);
+                }
             }
         }
 
@@ -447,15 +770,9 @@
 
             return TIMEFRAMES.map(tf => {
                 const candlesRemaining = Math.ceil(remainingMinutes / tf.minutes);
-
-                // Calculate time until next candle closes
-                // Candles close at regular intervals from market open
                 const msPerCandle = tf.minutes * 60 * 1000;
-                const msSinceEpoch = now;
-                const msIntoCurrentCandle = msSinceEpoch % msPerCandle;
+                const msIntoCurrentCandle = now % msPerCandle;
                 const msUntilNextClose = msPerCandle - msIntoCurrentCandle;
-
-                // Progress of current candle
                 const candleProgress = (msIntoCurrentCandle / msPerCandle) * 100;
 
                 return {
@@ -465,6 +782,21 @@
                     progress: candleProgress
                 };
             });
+        }
+
+        function calculateWeeklyCandles(ct, weekEnd) {
+            const now = ct.getTime();
+            const remainingMs = Math.max(0, weekEnd - now);
+            const remainingMinutes = remainingMs / (60 * 1000);
+
+            return {
+                '4h': Math.ceil(remainingMinutes / 240),
+                '1h': Math.ceil(remainingMinutes / 60),
+                '30m': Math.ceil(remainingMinutes / 30),
+                '15m': Math.ceil(remainingMinutes / 15),
+                '5m': Math.ceil(remainingMinutes / 5),
+                '1m': Math.ceil(remainingMinutes / 1)
+            };
         }
 
         function createDropdownContent(barIndex, candleInfo) {
@@ -507,7 +839,6 @@
                 content.classList.remove('expanded');
                 expandedDropdown = null;
             } else {
-                // Close any open dropdown
                 if (expandedDropdown !== null) {
                     const prevToggle = document.getElementById(`toggle${expandedDropdown}`);
                     const prevContent = document.getElementById(`content${expandedDropdown}`);
@@ -524,6 +855,7 @@
         function update() {
             const ct = getCentralTime();
             const weekStart = getWeekStart(ct);
+            const weekEnd = new Date(weekStart.getTime() + TOTAL_MS);
             const now = ct.getTime();
             const elapsed = Math.max(0, Math.min(TOTAL_MS, now - weekStart.getTime()));
 
@@ -538,10 +870,18 @@
             // Update week percentage
             document.getElementById('weekPercentage').textContent = weekPercent.toFixed(1) + '%';
 
-            // Track cumulative elapsed time for bar calculations
+            // Update weekly candle countdown
+            const weeklyCandles = calculateWeeklyCandles(ct, weekEnd);
+            document.getElementById('weekly4h').textContent = weeklyCandles['4h'];
+            document.getElementById('weekly1h').textContent = weeklyCandles['1h'];
+            document.getElementById('weekly30m').textContent = weeklyCandles['30m'];
+            document.getElementById('weekly15m').textContent = weeklyCandles['15m'];
+            document.getElementById('weekly5m').textContent = weeklyCandles['5m'];
+            document.getElementById('weekly1m').textContent = weeklyCandles['1m'];
+
+            // Track cumulative elapsed time
             let cumulativeMs = 0;
 
-            // Update each bar
             for (let i = 0; i < 5; i++) {
                 const barDuration = BAR_DURATIONS[i];
                 const barStartMs = cumulativeMs;
@@ -570,12 +910,10 @@
                     fill.classList.add('active');
                     dropdown.classList.add('visible');
 
-                    // Calculate candle info for active bar
                     const barEnd = weekStart.getTime() + barEndMs;
                     const candleInfo = calculateCandleInfo(ct, barEnd);
                     dropdown.innerHTML = createDropdownContent(i, candleInfo);
 
-                    // Restore expanded state if this was expanded
                     if (expandedDropdown === i + 1) {
                         const toggle = document.getElementById(`toggle${i + 1}`);
                         const content = document.getElementById(`content${i + 1}`);
@@ -598,6 +936,8 @@
             document.getElementById('currentTime').textContent = dateStr + ' - ' + timeStr;
         }
 
+        // Initialize
+        initializeSegments();
         update();
         setInterval(update, 1000);
     </script>
